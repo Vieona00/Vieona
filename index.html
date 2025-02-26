@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的作品集</title>
+    
+    <style>
+        body {
+
+            #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 9999;
+            }
+
+            /*所有元素缓缓淡入出现*/
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 顶部导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            z-index: 1000;
+            transition: background-color 0.5s ease-in-out; /* 让颜色变化更平滑 */
+
+            /* 毛玻璃模糊效果 */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); /* 兼容 Safari */
+
+            /* 让颜色变透明 */
+            background-color: rgba(255, 255, 255, 0.2);
+            }
+            
+        /* 左侧名字 */
+        .navbar-logo {
+            font-size: 16px;
+            font-weight: bold;
+            color: rgb(36, 34, 34); /* 默认白色 */
+            transition: color 0.5s ease-in-out;
+            margin-left: 20px; /* 左侧留一点空隙 */
+        }
+
+        /* 右侧导航链接 */
+        .navbar-links {
+            display: flex;
+            gap: 10px;
+            margin-left: auto; /* 让它推到最右 */
+            padding-right: 20px; /* 右侧留一点空隙 */
+        }
+
+        .navbar a {
+            color: rgb(36, 34, 34);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 3px 1px;
+            transition: 0.3s;
+        }
+
+        .navbar-links a {
+            color:  rgb(36, 34, 34);
+            text-decoration: none;
+            font-size: 12px;
+            padding: 5px 10px;
+            transition: color 0.5s ease-in-out;
+        }
+
+        .navbar a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+        }
+
+        /* Hero Section */
+        .hero /*半透明背景*/{
+            position: relative;
+            width: 85vw; /* 让卡片宽度小一点，左右留空 */
+            max-width: 1100px; /* 限制最大宽度 */
+            height: 50vh; /* 让卡片高度小一点 */
+            background: url('images/hero-bg.jpg') no-repeat center center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            color: white;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+            padding: 5%;
+            margin: 12vh auto; /* ✅ 修改这里，把 `12vh` 改成 `6vh` 让卡片上移 */
+            border-radius: 25px; /* 圆角 */
+            backdrop-filter: blur(10px); /* 毛玻璃效果 */
+            overflow: hidden; /* 避免内容超出导致滚动 */
+            mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0));
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0));
+        }
+        
+        .hero::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px; /* 渐变的高度 */
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(244, 244, 244, 0.7) 100%);
+            backdrop-filter: blur(5px); /* 毛玻璃模糊效果 */
+            pointer-events: none; /* 让它不影响鼠标点击 */
+        }
+
+        /* 🌟 右下角卡片样式 */
+        .hero-card {
+            position: absolute;
+            bottom: 20px; /* 离底部 20px */
+            right: 20px; /* 离右侧 20px */
+            background: white;
+            border-radius: 20px;
+            padding: 15px 20px;
+            width: 250px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* 轻微阴影 */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        /* 🔹 标题 */
+        .hero-card h3 {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        /* 🔹 副标题 */
+        .hero-card p {
+            font-size: 12px;
+            color: #666;
+            margin: 0;
+        }
+
+        /* 🔹 图片区域 */
+        .hero-card .image-group {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        /* 🔹 圆形图片 */
+        .hero-card .image-group img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* 🔹 按钮 */
+        .hero-card a {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            transition: 0.3s ease-in-out;
+        }
+
+        .hero-card a:hover {
+            color: #007bff;
+        }
+
+
+
+
+
+
+
+
+
+        
+        /* 让标题和文本定位到更低的位置 */
+        .hero h1 /*副标题*/ {
+            position: absolute;
+            top: 55%; /* 控制标题高度 */
+            left: 7%; /* 让文字靠左 */
+            font-size: 40px;
+            margin-bottom: 10px;
+            text-align: left;
+            max-width: 80vw; /* 避免超出屏幕 */
+        }
+
+        .hero p /*主标题*/ {
+            position: absolute;
+            top: 65%; /* 让段落跟随标题 */
+            left: 7%;
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: left;
+            max-width: 80vw;
+        }
+
+       /* 平板（屏幕宽度小于 1024px 时） */
+        /* 平板（屏幕宽度小于 1024px 时） */
+        @media (max-width: 1024px) {
+            .hero {
+                width: 90vw; /* 让卡片更窄，左右留空 */
+                height: 70vh;
+                margin: 10vh auto;
+            }
+        }
+
+        /* 手机端（屏幕宽度小于 768px 时） */
+        @media (max-width: 768px) {
+            .hero {
+                width: 92vw; /* 手机端更窄一点 */
+                height: 60vh;
+                padding: 8%;
+                margin: 8vh auto;
+            }
+        }
+
+
+         /* 作品集区域 */
+         .portfolio-section {
+            margin-top: -20px;
+            text-align: center;
+            position: relative; /* 让阴影相对于这个容器定位 */
+        }
+
+        .portfolio-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            white-space: nowrap;
+            padding: 10px;
+            gap: 20px;
+            align-items: center;
+            max-width: 90%;
+            margin: 0 auto;
+            cursor: grab;
+            position: relative;
+            z-index: 5; /* 让作品集层级低一点，确保阴影可见 */
+        }
+
+        .portfolio-item {
+            flex: 0 0 70%;
+            scroll-snap-align: center;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            min-height: 300px;
+            align-items: center;
+        }
+
+          /* 左右阴影效果，提示用户可以滑动 */
+          .portfolio-section::before,
+        .portfolio-section::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 100px; /* 控制阴影宽度 */
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .portfolio-section::before {
+            left: 0;
+            background: linear-gradient(to right, rgba(82, 82, 82, 0.2), rgba(0, 0, 0, 0));
+            z-index: 10;
+        }
+
+        .portfolio-section::after {
+            right: 0;
+            background: linear-gradient(to left, rgba(82, 82, 82, 0.2), rgba(0, 0, 0, 0));
+            z-index: 10; /* 确保阴影在作品集上层 */
+        }   
+
+        /* 滚动按钮 */
+        .gallery-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            background: black;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 5px;
+        }
+
+        .nav-btn:hover {
+            background: gray;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-screen">
+        <h2>加载中...</h2>
+    </div>
+
+    <!-- 顶部导航栏 -->
+    <div class="navbar">
+        <div class="navbar-logo">
+            <i class="fa-solid fa-palette"></i> Vieona Pan
+        </div>
+        <div class="navbar-links">
+            <a href="#"><i class="fa-solid fa-house"></i> 首页</a>
+            <a href="#portfolio"><i class="fa-solid fa-image"></i> 作品集</a>
+            <a href="#about"><i class="fa-solid fa-user"></i> 关于我</a>
+        </div>
+    </div>
+    
+
+    
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>我的作品集</h1>
+        <p>欢迎来到我的世界，这里展示我的创作。</p>
+    </div>
+
+
+    <!-- 🌟 右下角悬浮卡片 -->
+    <div class="hero-card">
+        <h3>Know More →</h3>
+        <p>Awesome Places</p>
+        <div class="image-group">
+            <img src="https://via.placeholder.com/40" alt="Image 1">
+            <img src="https://via.placeholder.com/40" alt="Image 2">
+            <img src="https://via.placeholder.com/40" alt="Image 3">
+        </div>
+        <a href="#">Learn More →</a>
+    </div>
+    </div>
+
+
+
+    <div class="container portfolio-section" id="portfolio">
+        <div class="portfolio-container">
+            <div class="portfolio-item">
+                <h2>插画作品</h2>
+                <img src="https://via.placeholder.com/600x400" alt="插画作品">
+                <p>这是一幅关于梦想的插画</p>
+            </div>
+            <div class="portfolio-item">
+                <h2>3D建模</h2>
+                <img src="https://via.placeholder.com/600x400" alt="3D模型">
+                <p>一个游戏角色的3D模型</p>
+            </div>
+            <div class="portfolio-item">
+                <h2>UI 设计</h2>
+                <img src="https://via.placeholder.com/600x400" alt="UI 设计">
+                <p>这是我设计的一个APP界面。</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero">
+        <h1>我的作品集</h1>
+        <p>欢迎来到我的世界，这里展示我的创作。</p>
+    </div>
+
+   
+
+    <div class="gallery-nav">
+        <button class="nav-btn" onclick="scrollGallery(-1)">⬅️ 上一个</button>
+        <button class="nav-btn" onclick="scrollGallery(1)">下一个 ➡️</button>
+    </div>
+
+    <script>
+
+        window.addEventListener("load", function () {
+    document.body.style.opacity = "1"; // 让页面渐入
+    document.getElementById("loading-screen").style.opacity = "0"; // 让加载动画淡出
+    setTimeout(() => {
+        document.getElementById("loading-screen").style.display = "none"; // 完全隐藏加载动画
+    }, 500);
+    });
+
+        window.addEventListener("load", function () {
+        document.body.style.opacity = "1"; // 加载完成后渐入
+        });
+
+    document.addEventListener("DOMContentLoaded", function () {
+    console.log("✅ JavaScript 加载成功！");
+    });
+
+
+
+    </script>
+    
+    </body>
+    </html>
